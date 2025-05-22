@@ -1,4 +1,4 @@
 # Weather-API
 Python Weather Data Analysis Tool
 
-<pre>```pip install pylint```</pre>
+<pre>pip install pylint</pre>
