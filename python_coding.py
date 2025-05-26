@@ -4,21 +4,22 @@ It will retrieve current weather for the chosen city, as well as historical
 statistics.
 
 """
-#import requests is used to retrieve the co-ordinates of the input city (latitude & longitude)
-#Weather API uses latitude & longitude to retrieve weather data
+#requests: allows HTTP requests
+#json: data transfer on the web
+#datetime: allows date conversions
+#pandas/numpy: mathematical calculations
 import json
 from datetime import datetime, timedelta
 import requests
 import pandas as pd
 import numpy as np
 
-#user input
-#now() function pulls current date and time
-#however it has been formatted to be viewed as yyyy-mm-dd hh:mm:ss
-
 print ("You will be prompted to input your city name.")
 print ("To exit the city input prompt, please input:\033[1m Done! \033[0m")
 
+#user city input
+#if empty,prompted to input again
+#Done! exits the request
 while True:
     city_input = input("Please input your city name: ").strip()
     if len(city_input) < 1 :
@@ -28,27 +29,25 @@ while True:
         exit()
     break
 
-#ensure neat city reflects for print
-city = city_input.capitalize()
-current = datetime.now()
-current2 = current.strftime("%Y-%m-%d %H:%M:%S")
+
+#7 day history statistics
+city = city_input.capitalize() #capitalize for neat output
+current = datetime.now() #time as at input
+current2 = current.strftime("%Y-%m-%d %H:%M:%S") 
+#date conversions, to ensure format used on API
 current3 = current.strftime("%Y-%m-%d")
-N = 7
-hist7 = current - timedelta(days=N)
+N = 7 #number of days for history statistics/calcs
+hist7 = current - timedelta(days=N) #7 day range calculation
 hist7b = hist7.strftime("%Y-%m-%d")
 
 URL1 = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1"
-#below stores the information retrieved from the url
+#no API code required
+#first link is used to retrieve longitude/latitude
 info = requests.get(URL1, timeout=10) #timeout within 10seconds
 #if status code is 200, then the request was successful
-#if succesful, then the below will request the latitude and longitude
+#if succesful, then the below will retrieve the latitude and longitude
 #if not successful, error message
-#if the status code is not 200, any other will also yield a error message with the status code too
-#if either else give an error, it will exit the coding
-#OR MAYBE DO WHILE LOOP TO TAKE YOU BACK TO ENTER CITY AGAIN!!!!!!!!!
-
-#if you want to get out the request loop and exit, input is "Done!"
-#try except for any errors and to allow you to input the city again/ends or ends loop of
+#exceptions for website errors too
 
 try:
     if info.status_code == 200:
@@ -70,16 +69,12 @@ except (requests.exceptions.RequestException, ValueError, KeyError) as e:
     print(f"An error occured: {e}")
     exit()
 
-#we need to format the above now and 7 day date ranges into the
 #open-meteo date format of ISO6801, which is yyyy-mm-dd.
 #"Start date" is the date 7 days ago and "End date" is now current date
 start_date = hist7.strftime("%Y-%m-%d")
 end_date = current.strftime("%Y-%m-%d")
-#once we have the latitude & longitude and date range, we use it to find the
-#required weather in our API website, as well as the historical data
 URL2 = "https://historical-forecast-api.open-meteo.com/v1/forecast"
-#this will search for current weather if the statement is True
-#date format is as per open-meteo requirement of iso8601 date format
+#second link is used to retrieve actual weather detail
 params = {
             "latitude": latitude,
             "longitude": longitude,
@@ -89,11 +84,11 @@ params = {
             "current_weather": True,          
         }
 #the get function will use the paramaters above to retrieve the information required
-data = requests.get(URL2, params=params, timeout=10)
-#status code 200 as per above + error message
+data = requests.get(URL2, params=params, timeout=10) #timeout within 10seconds
 #this prompt is to pull current weather temperature in degrees celcius
 #(temperature unit used in South Africa)
-#Error message if there is no current weather temperature available
+#error message if there is no current weather temperature available
+#except for wesbite errors too
 
 try:
     if data.status_code == 200:
@@ -122,16 +117,15 @@ except (ValueError, KeyError) as ee:
     print(f"An error occurred: {ee}")
     exit()
 
-arr = np.array(hist_weather)
-ave1 = np.average(arr)
-ave2 = round(ave1, 1)
-med1 = np.median(arr)
+arr = np.array(hist_weather) #create history weather array
+ave1 = np.average(arr) #average weather calculation
+ave2 = round(ave1, 1) 
+med1 = np.median(arr) #median weather calculation
 med2 = round(med1, 1)
 #mode can give more than one value, so needs formatting to ensure readability for the user
 mod1 = pd.Series(arr).mode()
 mod_con = mod1.tolist()
-#panda series cannot be read in json format, need to convert it -
-#but this gives a weird output if there is only 1 value
+#panda series cannot be read in json format,list conversion 
 
 print("Seven Day Average Temperature:", ave2,"°C")
 print("Seven Day Median Temperature:", med2,"°C")
@@ -142,14 +136,8 @@ else:
     MOD2 = ", ".join([f"{temp}°C" for temp in mod1])
     print(f"Seven Day Mode Temperatures: {MOD2}")
 
-#to list is required, due to pandas not being bale to convert to JSON
-#panda series cannot be read in json format, need to convert it
-#but this gives a weird output if there is only 1 value
-# if 1 value, it will use to list conversion
-# if multiple values, it will use mod2 that has been joined
-
 #output info to save as a JSON document
-#how do i include degrees celcius in the output of the json???????????
+#saves to folder where you saved .py
 
 output_data = {
      "City Selected": city,
@@ -167,5 +155,5 @@ output_data = {
 DOC = f"{city}_{current3}_weather.json"
 with open(DOC, "w", encoding="utf-8") as f:
     json.dump(output_data, f, indent=4, ensure_ascii= False)
-#ascii=false ensure the degrees celcius does not pull through as \u00b0C on the json docuement
+#ascii=false ensure the degrees celcius does not pull through as \u00b0C on the json document
 print(f"Thank you, your JSON document has been saved: {DOC}")
