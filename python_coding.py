@@ -45,7 +45,7 @@ URL1 = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1"
 #first link is used to retrieve longitude/latitude
 info = requests.get(URL1, timeout=10) #timeout within 10seconds
 #if status code is 200, then the request was successful
-#if succesful, then the below will retrieve the latitude and longitude
+#if successful, then the below will retrieve the latitude and longitude
 #if not successful, error message
 #exceptions for website errors too
 
@@ -66,7 +66,7 @@ try:
         print(f"Error: {info.status_code}")
         exit()
 except (requests.exceptions.RequestException, ValueError, KeyError) as e:
-    print(f"An error occured: {e}")
+    print(f"An error occurred: {e}")
     exit()
 
 #open-meteo date format of ISO6801, which is yyyy-mm-dd.
@@ -83,12 +83,12 @@ params = {
             "hourly": "temperature_2m",  
             "current_weather": True,          
         }
-#the get function will use the paramaters above to retrieve the information required
+#the get function will use the parameters above to retrieve the information required
 data = requests.get(URL2, params=params, timeout=10) #timeout within 10seconds
-#this prompt is to pull current weather temperature in degrees celcius
+#this prompt is to pull current weather temperature in degrees celsius
 #temperature unit used in South Africa
 #error message if there is no current weather temperature available
-#except for wesbite errors too
+#except for website errors too
 
 try:
     if data.status_code == 200:
