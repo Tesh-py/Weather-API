@@ -33,7 +33,7 @@ while True:
 #7 day history statistics
 city = city_input.capitalize() #capitalize for neat output
 current = datetime.now() #time as at input
-current2 = current.strftime("%Y-%m-%d %H:%M:%S") 
+current2 = current.strftime("%Y-%m-%d %H:%M:%S")
 #date conversions, to ensure format used on API
 current3 = current.strftime("%Y-%m-%d")
 N = 7 #number of days for history statistics/calcs
@@ -119,13 +119,13 @@ except (ValueError, KeyError) as ee:
 
 arr = np.array(hist_weather) #create history weather array
 ave1 = np.average(arr) #average weather calculation
-ave2 = round(ave1, 1) 
+ave2 = round(ave1, 1)
 med1 = np.median(arr) #median weather calculation
 med2 = round(med1, 1)
 #mode can give more than one value, so needs formatting to ensure readability for the user
 mod1 = pd.Series(arr).mode()
 mod_con = mod1.tolist()
-#panda series cannot be read in json format,list conversion 
+#panda series cannot be read in json format,list conversion
 
 print("Seven Day Average Temperature:", ave2,"°C")
 print("Seven Day Median Temperature:", med2,"°C")
