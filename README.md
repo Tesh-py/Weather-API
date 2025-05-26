@@ -46,7 +46,7 @@ Part 3: The calculations for Current Date & Time and the 7 daye range includes:
 - This is the format required for Open-Meteo to retrieve the weather data, as their website uses date format ISO6801
 - timedelta is used to calculate the date range between 7 days prior and current date
 
-Part 4: info = requests.get(URL1, timeout=10)
+Part 4: info = `requests.get(URL1, timeout=10)`
 - the information retrieved from URL1 is stored in info
 - ensuring a 10 second timeout if there is no response
 - if the info status code is 200, it will retrieve the Longitude and Latitude of the input city
