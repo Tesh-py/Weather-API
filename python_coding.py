@@ -86,7 +86,7 @@ params = {
 #the get function will use the paramaters above to retrieve the information required
 data = requests.get(URL2, params=params, timeout=10) #timeout within 10seconds
 #this prompt is to pull current weather temperature in degrees celcius
-#(temperature unit used in South Africa)
+#temperature unit used in South Africa
 #error message if there is no current weather temperature available
 #except for wesbite errors too
 
@@ -122,7 +122,6 @@ ave1 = np.average(arr) #average weather calculation
 ave2 = round(ave1, 1)
 med1 = np.median(arr) #median weather calculation
 med2 = round(med1, 1)
-#mode can give more than one value, so needs formatting to ensure readability for the user
 mod1 = pd.Series(arr).mode()
 mod_con = mod1.tolist()
 #panda series cannot be read in json format,list conversion
