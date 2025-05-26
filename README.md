@@ -68,6 +68,27 @@ Part 8: the average, median and mode is calculated.
 - ave2: round off the ave1 output to align to all other data ouput (1 decimal)
 - med1: used numpy median calculation
 - med2: round off the med1 output to align to all other data ouput (1 decimal)
-  
-  
+- mod1: panda conversion and mode calculation
+- mod_con: converts mod1 into a normal list as panda list cannot be read in json format
 
+Part 9: mod1 can result in one output value or multiple outputs, therefore correct formatting for each scenario is required.
+- mod1.iloc[0] is used for only one output result, without pulling through additional information that is not a number
+- ", ".join([f"{temp}°C" is used for multiple outputs. It will combine all output numbers into one string, seperated with commas. This helps with readibility from the user.
+
+Part 10: if the above is all successful, the user will see the print of:
+- city they input
+- the longitude of the city 
+- the latitude of the city
+- the current date and time
+- the start and end date of the 7 day date range
+- the current temperature
+- the 7 day average temperature
+- the 7 day median temperature
+- the 7 daye mode temperature/s
+
+Part 11: the above print information will be saved into a json document.
+- the document will be saved with the name: _city input and current date & time_ _weather
+- the document will be saved in the same folder as the .py document was saved in
+- encoding = "utf-8" ensures that which ever text editor program you use to view the json in, it will not affect the degrees celcius sign
+- indent= 4 ensures a neat otput that can be read easily by the user
+- ensure_ascii= False ensures that the degrees celcius does not pull through as \u00b0C on the json document
